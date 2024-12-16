@@ -1,4 +1,4 @@
-# pipeline.py
+#bert_with_logic.py
 import spacy
 import torch
 import torch.nn as nn
@@ -211,14 +211,14 @@ class JointNERREPipeline:
                 
                 entity_spans, _ = self.get_entity_spans_and_labels(word_preds)
 
-                # Relation prediction and loss
+                # Relation predictio
                 rel_logits = self.model.predict_relations(sequence_output, entity_spans)
                 rel_labels = self.prepare_relation_labels(rel_labels, entity_spans)
 
                 output_chunk = F.softmax(ner_logits, dim=-1)
 
 
-                 # Get mask and norm
+                 
                 mask = (aligned_labels != -100).float()
                 norm = mask.sum()
                 ner_loss_new = (ner_loss* mask.view(-1)).sum()  # Don't normalize yet
@@ -236,10 +236,10 @@ class JointNERREPipeline:
                             out_rel[key] = F.softmax(rel_logits[pred_idx], dim=0)
                             pred_idx += 1
 
-                # logic_loss = self.model.compute_logic_loss(output_chunk, out_rel, self.label_map)
+                logic_loss = self.model.compute_logic_loss(output_chunk, out_rel, self.label_map)
 
                 main_loss = (ner_loss_new + rel_loss/norm)
-                # loss = main_loss + 0.5 * logic_loss  # Add logic loss as regularization
+                loss = main_loss + 0.5 * logic_loss 
                 loss = main_loss
 
            
@@ -534,7 +534,7 @@ class JointNERREPipeline:
             latest_checkpoint = sorted(checkpoints, key=lambda x: int(x.split('_')[2]))[-1]
             checkpoint_path = os.path.join(checkpoint_dir, latest_checkpoint)
         
-        # Now check the final checkpoint_path
+
         if not os.path.exists(checkpoint_path):
             print(f"No checkpoint found at {checkpoint_path}")
             return 0
@@ -697,7 +697,7 @@ class JointNERREPipeline:
 
 if __name__ == "__main__":
     pipeline = JointNERREPipeline()
-    # pipeline.verify_data()  # Add this line
+    # pipeline.verify_data() 
     # pipeline.debug_predictions()
     print("Pipeline initialized")
     print(f"Training data size: {len(pipeline.train_words)}")
