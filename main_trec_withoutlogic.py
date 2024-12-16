@@ -619,7 +619,7 @@ class logicLoss:
 
 
 criterion = nn.NLLLoss()
-emb = pickle.load(open("data/TREC/embedding300_glove", "rb"))
+emb = pickle.load(open("data/embedding300_glove", "rb"))
 
 
 def save_checkpoint(model, optimizer, epoch, path="checkpoints/checkpoint.pth"):
@@ -652,17 +652,17 @@ def load_checkpoint(model, optimizer, path="checkpoints/checkpoint.pth"):
 
 os.makedirs("checkpoints", exist_ok=True)
 
-idxs_train = pickle.load(open("data/TREC/idx.train", "rb"))
-idxs_test = pickle.load(open("data/TREC/idx.test", "rb"))
-labels_train, labels_type_train = pickle.load(open("data/TREC/labels_chunk.train", "rb"))
-labels_test, labels_type_test = pickle.load(open("data/TREC/labels_chunk.test", "rb"))
-labels_rel_train = pickle.load(open("data/TREC/labels_2rel.train", "rb"))\
+idxs_train = pickle.load(open("data/idx.train", "rb"))
+idxs_test = pickle.load(open("data/idx.test", "rb"))
+labels_train, labels_type_train = pickle.load(open("data/labels_chunk.train", "rb"))
+labels_test, labels_type_test = pickle.load(open("data/labels_chunk.test", "rb"))
+labels_rel_train = pickle.load(open("data/labels_2rel.train", "rb"))\
 
 for i in range(min(5, len(labels_rel_train))):
     print(f"Print statement: Sentence {i} relations: {labels_rel_train[i]}")
 
-labels_rel_test = pickle.load(open("data/TREC/labels_2rel.test", "rb"))
-pos_train, pos_test = pickle.load(open("data/TREC/pos.tag", "rb"))
+labels_rel_test = pickle.load(open("data/labels_2rel.test", "rb"))
+pos_train, pos_test = pickle.load(open("data/pos.tag", "rb"))
 pos_dic = ['pad']
 posind_train, posind_test = [], []
 for pos_line in pos_train:
@@ -684,7 +684,7 @@ emb = torch.tensor(emb, dtype=torch.float).to(device)
 model = make_model(emb.shape[0], len(pos_dic), emb, sch_k=1.0, N=2)
 model = model.to(device)
 
-f_out = open("result/TREC/transformer-no-logic.txt", "w")
+f_out = open("result/transformer-without-logic.txt", "w")
 
 optimizer = optim.Adadelta(model.parameters())
 
