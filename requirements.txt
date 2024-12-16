@@ -5,5 +5,4 @@ numpy>=1.24.3
 tqdm>=4.65.0
 evaluate>=0.4.1
 spacy>=3.0.0
-scikit-learn>=1.0.0 
-pandas>=1.5.0 
+
